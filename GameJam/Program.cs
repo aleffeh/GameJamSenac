@@ -27,6 +27,7 @@ namespace GameJam
         public static LowLevelMouseHook MouseHook { get; private set; }
         public static GameData Data { get; set; }
         public static string DefaultDB { get; private set; }
+        public static Thread t1 { get; set; }
 
         public static Color Red;
         public static Color White;
@@ -40,6 +41,7 @@ namespace GameJam
         static void Main(string[] args)
         {
             SetUp();
+            BPS();
             while (!Exit)
             {
                 Update();
@@ -144,6 +146,25 @@ namespace GameJam
             // CheckStuff();
             UpdateUI();
         }
+
+        private static void BPS()
+        {
+
+            t1 = new Thread(new ThreadStart(SeccondsAccumuler));
+            t1.Start();
+
+        }
+
+        private static void SeccondsAccumuler()
+        {
+            while (true)
+            {
+
+                Thread.Sleep(1000);
+                Breads += BreadsPerSecond;
+            }
+        }
+
         //This method runs every x milesconds, inside the Update method,
         private static void UpdateUI()
         {
@@ -177,7 +198,9 @@ namespace GameJam
             {
                 if (Data.Upgrades[i].Cost <= Breads)
                 {
-                    if (Data.Upgrades[i].Bought)
+                    if (!Data.Upgrades[i].Bought)
+                        Names[i] = "???";
+                    else
                         Names[i] = Data.Upgrades[i].Name;
                 }
                 else
@@ -191,6 +214,7 @@ namespace GameJam
 
             Construct();
         }
+
 
 
         static void Construct()
@@ -268,222 +292,226 @@ namespace GameJam
         //This method deals with all the keyboard inputs, once the Console.Reads doesn't work anymore. 
         private static void KeyboardHook_OnKeyboardEvent(VirtualKeyCode key, KeyState state)
         {
-            switch (key)
+            if (state == KeyState.Down)
             {
+                switch (key)
+                {
 
-                case VirtualKeyCode.Escape:
-                    Exit = true;
-                    break;
-                case VirtualKeyCode.A:
-                    //Ajudantes Buy
-                    if (!Data.Upgrades[0].Bought)
-                    {
-                        if (Breads > Data.Upgrades[0].Cost)
+                    case VirtualKeyCode.Escape:
+                        t1.Abort();
+                        Exit = true;
+                        break;
+                    case VirtualKeyCode.A:
+                        //Ajudantes Buy
+                        if (!Data.Upgrades[0].Bought)
                         {
-                            Comprar(0);
-                        }
-
-                    }
-                    else
-                    {
-                        if (!Data.Upgrades[4].Bought)
-                        {
-                            if (Breads > Data.Upgrades[4].Cost)
+                            if (Breads > Data.Upgrades[0].Cost)
                             {
-                                Comprar(4);
+                                Comprar(0);
                             }
+
                         }
                         else
                         {
-                            if (!Data.Upgrades[8].Bought)
+                            if (!Data.Upgrades[4].Bought)
                             {
-                                if (Breads > Data.Upgrades[8].Cost)
+                                if (Breads > Data.Upgrades[4].Cost)
                                 {
-                                    Comprar(8);
+                                    Comprar(4);
                                 }
                             }
                             else
                             {
-                                if (!Data.Upgrades[12].Bought)
+                                if (!Data.Upgrades[8].Bought)
                                 {
-                                    if (Breads > Data.Upgrades[12].Cost)
+                                    if (Breads > Data.Upgrades[8].Cost)
                                     {
-                                        Comprar(12);
+                                        Comprar(8);
                                     }
                                 }
                                 else
                                 {
-                                    if (!Data.Upgrades[16].Bought)
+                                    if (!Data.Upgrades[12].Bought)
                                     {
-                                        if (Breads > Data.Upgrades[16].Cost)
+                                        if (Breads > Data.Upgrades[12].Cost)
                                         {
-                                            Comprar(16);
+                                            Comprar(12);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (!Data.Upgrades[16].Bought)
+                                        {
+                                            if (Breads > Data.Upgrades[16].Cost)
+                                            {
+                                                Comprar(16);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
 
-                    break;
-                case VirtualKeyCode.S:
-                    if (!Data.Upgrades[1].Bought)
-                    {
-                        if (Breads > Data.Upgrades[1].Cost)
+                        break;
+                    case VirtualKeyCode.S:
+                        if (!Data.Upgrades[1].Bought)
                         {
-                            Comprar(1);
-                        }
-
-                    }
-                    else
-                    {
-                        if (!Data.Upgrades[5].Bought)
-                        {
-                            if (Breads > Data.Upgrades[5].Cost)
+                            if (Breads > Data.Upgrades[1].Cost)
                             {
-                                Comprar(5);
+                                Comprar(1);
                             }
+
                         }
                         else
                         {
-                            if (!Data.Upgrades[9].Bought)
+                            if (!Data.Upgrades[5].Bought)
                             {
-                                if (Breads > Data.Upgrades[9].Cost)
+                                if (Breads > Data.Upgrades[5].Cost)
                                 {
-                                    Comprar(9);
+                                    Comprar(5);
                                 }
                             }
                             else
                             {
-                                if (!Data.Upgrades[13].Bought)
+                                if (!Data.Upgrades[9].Bought)
                                 {
-                                    if (Breads > Data.Upgrades[13].Cost)
+                                    if (Breads > Data.Upgrades[9].Cost)
                                     {
-                                        Comprar(13);
+                                        Comprar(9);
                                     }
                                 }
                                 else
                                 {
-                                    if (!Data.Upgrades[17].Bought)
+                                    if (!Data.Upgrades[13].Bought)
                                     {
-                                        if (Breads > Data.Upgrades[17].Cost)
+                                        if (Breads > Data.Upgrades[13].Cost)
                                         {
-                                            Comprar(17);
+                                            Comprar(13);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (!Data.Upgrades[17].Bought)
+                                        {
+                                            if (Breads > Data.Upgrades[17].Cost)
+                                            {
+                                                Comprar(17);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                    break;
-                case VirtualKeyCode.D:
-                    //Fábrica
-                    if (!Data.Upgrades[2].Bought)
-                    {
-                        if (Breads > Data.Upgrades[2].Cost)
+                        break;
+                    case VirtualKeyCode.D:
+                        //Fábrica
+                        if (!Data.Upgrades[2].Bought)
                         {
-                            Comprar(2);
-                        }
-
-                    }
-                    else
-                    {
-                        if (!Data.Upgrades[6].Bought)
-                        {
-                            if (Breads > Data.Upgrades[6].Cost)
+                            if (Breads > Data.Upgrades[2].Cost)
                             {
-                                Comprar(6);
+                                Comprar(2);
                             }
+
                         }
                         else
                         {
-                            if (!Data.Upgrades[10].Bought)
+                            if (!Data.Upgrades[6].Bought)
                             {
-                                if (Breads > Data.Upgrades[10].Cost)
+                                if (Breads > Data.Upgrades[6].Cost)
                                 {
-                                    Comprar(10);
+                                    Comprar(6);
                                 }
                             }
                             else
                             {
-                                if (!Data.Upgrades[14].Bought)
+                                if (!Data.Upgrades[10].Bought)
                                 {
-                                    if (Breads > Data.Upgrades[14].Cost)
+                                    if (Breads > Data.Upgrades[10].Cost)
                                     {
-                                        Comprar(14);
+                                        Comprar(10);
                                     }
                                 }
                                 else
                                 {
-                                    if (!Data.Upgrades[18].Bought)
+                                    if (!Data.Upgrades[14].Bought)
                                     {
-                                        if (Breads > Data.Upgrades[18].Cost)
+                                        if (Breads > Data.Upgrades[14].Cost)
                                         {
-                                            Comprar(18);
+                                            Comprar(14);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (!Data.Upgrades[18].Bought)
+                                        {
+                                            if (Breads > Data.Upgrades[18].Cost)
+                                            {
+                                                Comprar(18);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                    break;
-                case VirtualKeyCode.F:
-                    //Pesquisa
-                    if (!Data.Upgrades[3].Bought)
-                    {
-                        if (Breads > Data.Upgrades[3].Cost)
+                        break;
+                    case VirtualKeyCode.F:
+                        //Pesquisa
+                        if (!Data.Upgrades[3].Bought)
                         {
-                            Comprar(3,true);
-                        }
-
-                    }
-                    else
-                    {
-                        if (!Data.Upgrades[7].Bought)
-                        {
-                            if (Breads > Data.Upgrades[7].Cost)
+                            if (Breads > Data.Upgrades[3].Cost)
                             {
-                                Comprar(7,true);
+                                Comprar(3, true);
                             }
+
                         }
                         else
                         {
-                            if (!Data.Upgrades[11].Bought)
+                            if (!Data.Upgrades[7].Bought)
                             {
-                                if (Breads > Data.Upgrades[11].Cost)
+                                if (Breads > Data.Upgrades[7].Cost)
                                 {
-                                    Comprar(11,true);
+                                    Comprar(7, true);
                                 }
                             }
                             else
                             {
-                                if (!Data.Upgrades[15].Bought)
+                                if (!Data.Upgrades[11].Bought)
                                 {
-                                    if (Breads > Data.Upgrades[15].Cost)
+                                    if (Breads > Data.Upgrades[11].Cost)
                                     {
-                                        Comprar(15,true);
+                                        Comprar(11, true);
                                     }
                                 }
                                 else
                                 {
-                                    if (!Data.Upgrades[19].Bought)
+                                    if (!Data.Upgrades[15].Bought)
                                     {
-                                        if (Breads > Data.Upgrades[19].Cost)
+                                        if (Breads > Data.Upgrades[15].Cost)
                                         {
-                                            Comprar(19,true);
+                                            Comprar(15, true);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (!Data.Upgrades[19].Bought)
+                                        {
+                                            if (Breads > Data.Upgrades[19].Cost)
+                                            {
+                                                Comprar(19, true);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                    break;
-                    //case VirtualKeyCode.F5:
-                    //    NewGame();
-                    //    break;
+                        break;
+                        //case VirtualKeyCode.F5:
+                        //    NewGame();
+                        //    break;
+                }
+
             }
         }
-
         //private static void NewGame()
         //{
         //    var datinha = JsonConvert.DeserializeObject<GameData>(File.ReadAllText("user.dll"));
