@@ -14,8 +14,8 @@ namespace GameJam
         public static bool Exit { get; private set; }
         public static int Clicks { get; private set; }
         public static int DelayTime { get; private set; } // in miliseconds - define in SetUpVars().
-        public static LowLevelKeyboardHook keyboardHook { get; private set; }
-        public static LowLevelMouseHook mouseHook { get; private set; }
+        public static LowLevelKeyboardHook KeyboardHook { get; private set; }
+        public static LowLevelMouseHook MouseHook { get; private set; }
 
         static void Main(string[] args)
         {
@@ -24,33 +24,33 @@ namespace GameJam
             {
                 Update();
                 Thread.Sleep(DelayTime);
-
             }
             SetDown();
         }
 
-
+        //The Core off applications is here
+        #region SetUp/SetDown/CheckUps/Updates
         private static void SetUp()
         {
             SetUpVars();
             // Disable the Console Edit mode, in way to never lock the main thread during execution due to selections on the window.
             DisableQuickEdit();
             // Initialize Hookers who deal with all the inputs after now.
-            keyboardHook = new LowLevelKeyboardHook();
-            mouseHook = new LowLevelMouseHook();
+            KeyboardHook = new LowLevelKeyboardHook();
+            MouseHook = new LowLevelMouseHook();
             // Defines actions to events.
-            keyboardHook.OnKeyboardEvent += KeyboardHook_OnKeyboardEvent;
-            mouseHook.OnMouseEvent += MouseHook_OnMouseEvent;
+            KeyboardHook.OnKeyboardEvent += KeyboardHook_OnKeyboardEvent;
+            MouseHook.OnMouseEvent += MouseHook_OnMouseEvent;
             // Attach the hookers into main thread.
-            keyboardHook.InstallHook();
-            mouseHook.InstallHook();
-
+            KeyboardHook.InstallHook();
+            MouseHook.InstallHook();
         }
+
         //Runs after Esc pressed, defines the closing behaviour.
         private static void SetDown()
         {
-            mouseHook.Dispose();
-            keyboardHook.Dispose();
+            MouseHook.Dispose();
+            KeyboardHook.Dispose();
         }
 
         // On this call, defines all the default values for the properties
@@ -76,9 +76,12 @@ namespace GameJam
         //All the Checkings that needs to run every frame goes here, this is the first method that run on Update().
         private static void CheckStuff()
         {
-            
-        }
 
+        }
+        #endregion
+
+        // Add keyBindings Here
+        #region Mouse/Keyboard Hooks Interactions
         //This is the cherry on top of the cake, this method handle the mouse clicks and has ONLY ONE FUNCTION, update the Click property... ^_^
         private static void MouseHook_OnMouseEvent(VirtualKeyCode key, KeyState state, int x, int y)
         {
@@ -87,7 +90,7 @@ namespace GameJam
 
         //This method deals with all the keyboard inputs, once the Console.Reads doesn't work anymore. 
         private static void KeyboardHook_OnKeyboardEvent(VirtualKeyCode key, KeyState state)
-        { 
+        {
             switch (key)
             {
                 case VirtualKeyCode.Escape:
@@ -95,13 +98,30 @@ namespace GameJam
                     break;
             }
         }
-
+        #endregion
 
         //This region deals with the QuickEdit mode included in console.
         #region defines console edit mode
 
-        public const int STD_INPUT_HANDLE = -10;
+        public const int STD_INPUT_HANDLE = -10; // to disable quick edit
 
+        // config to disable close button start
+
+        private const int MF_BYCOMMAND = 0x00000000;
+        public const int SC_CLOSE = 0xF060;
+
+        [DllImport("user32.dll")]
+        public static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+            [DllImport("kernel32.dll", ExactSpelling = true)]
+        private static extern IntPtr GetConsoleWindow();
+
+        // config to disable close button end
+
+
+        // configurations to disable quick edit mode start
         [DllImport("Kernel32.dll", SetLastError = true)]
         public static extern IntPtr GetStdHandle(int nStdHandle);
 
@@ -123,6 +143,7 @@ namespace GameJam
 
         static void DisableQuickEdit()
         {
+            DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_CLOSE, MF_BYCOMMAND);
             IntPtr conHandle = GetStdHandle(STD_INPUT_HANDLE);
             int mode;
 
@@ -140,25 +161,27 @@ namespace GameJam
             }
         }
 
-        static void EnableQuickEdit()
-        {
-            IntPtr conHandle = GetStdHandle(STD_INPUT_HANDLE);
-            int mode;
+        //static void EnableQuickEdit()
+        //{
+        //    IntPtr conHandle = GetStdHandle(STD_INPUT_HANDLE);
+        //    int mode;
 
-            if (!GetConsoleMode(conHandle, out mode))
-            {
-                // error getting the console mode. Exit.
-                return;
-            }
+        //    if (!GetConsoleMode(conHandle, out mode))
+        //    {
+        //        // error getting the console mode. Exit.
+        //        return;
+        //    }
 
-            mode = mode | (QuickEditMode | ExtendedFlags);
+        //    mode = mode | (QuickEditMode | ExtendedFlags);
 
-            if (!SetConsoleMode(conHandle, mode))
-            {
-                // error setting console mode.
-            }
-        }
+        //    if (!SetConsoleMode(conHandle, mode))
+        //    {
+        //        // error setting console mode.
+        //    }
+        //}
+        // configurations to disable quick edit mode end
 
         #endregion
+
     }
 }
