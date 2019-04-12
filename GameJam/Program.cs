@@ -32,8 +32,7 @@ namespace GameJam
         public static Color Red;
         public static Color White;
         public static Color Green;
-
-
+        
         public static Color[] Colors;
         public static string[] Names;
 
@@ -199,12 +198,12 @@ namespace GameJam
 
            
             Console.WriteLine("                                                            Patricio's Bakery ");
-            Console.WriteLine("     ~~~Statistics~~~ ");
+            Console.WriteLine("     |----Statistics----| ");
             Console.Write("{0,-62}  ___________\n","");
             Console.Write("{0,7} ",Breads,Green); Console.Write("{0,-54} (   )_______)\n","Pães");
             Console.Write("{0,7} ", BreadsPerSecond,Green); Console.Write("{0,-54} |   |Clique!|\n","Pães Por Segundo");
             Console.Write("{0,7} ", BreadsPerClick, Green); Console.Write("{0,-54} |___|_______|\n","Pães Por Click");
-            Console.WriteLine("\n\n\n                                                            ~~~Upgrades~~~\n");
+            Console.WriteLine("\n\n\n                                                            |----Upgrades----|\n");
             Console.WriteLine("                                                          	                        @*#* ");
             Console.WriteLine("                                                 +                                    _*                             _____ ");
             Console.WriteLine("              (o_                                A_                              _   | |                            /    /|");
@@ -240,14 +239,12 @@ namespace GameJam
             Console.Write("{0,-28}{1}", Names[17], Data.Upgrades[17].CostText, Colors[17]); Console.Write("|", White);
             Console.Write("{0,-28}{1}", Names[18], Data.Upgrades[18].CostText, Colors[18]); Console.Write("|", White);
             Console.Write("{0,-28}{1}", Names[19], Data.Upgrades[19].CostText, Colors[19]); Console.Write("\n", White);
-            
-
 
             Console.Write("\n                                                           DINOSSOUR ", Color.FromArgb(81, 255, 178));
             Console.Write("GAMES ", Color.FromArgb(164, 82, 255));
         }
 
-
+        
         //All the Checkings that needs to run every frame goes here, this is the first method that run on Update().
         private static void CheckStuff()
         {
