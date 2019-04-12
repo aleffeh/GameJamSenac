@@ -1,0 +1,167 @@
+{
+   "Breads":0,
+   "BreadsPerSecond":0,
+   "BreadsPerClick":1,
+   "Upgrades":[
+      {
+         "Id":0,
+         "Name":"Pinguins Ajudantes",
+         "CostText":"1",
+         "Cost":1,
+         "PPSUpgrade":1,
+         "Bought":false
+      },
+      {
+         "Id":1,
+         "Name":"Culto dos macaquinhos",
+         "CostText":"1",
+         "Cost":1,
+         "PPSUpgrade":1,
+         "Bought":false
+      },
+      {
+         "Id":2,
+         "Name":"Linha de Produção",
+         "CostText":"1",
+         "Cost":1,
+         "PPSUpgrade":1,
+         "Bought":false
+      },
+      {
+         "Id":3,
+         "Name":"Cientistas Cientosos",
+         "CostText":"1",
+         "Cost":1,
+         "PPSUpgrade":1,
+         "Bought":false
+      },
+      {
+         "Id":4,
+         "Name":"Humanos Escravizados",
+         "CostText":"50",
+         "Cost":50,
+         "PPSUpgrade":5,
+         "Bought":false
+      },
+      {
+         "Id":5,
+         "Name":"Pastores Ovelhas",
+         "CostText":"50",
+         "Cost":50,
+         "PPSUpgrade":5,
+         "Bought":false
+      },
+      {
+         "Id":6,
+         "Name":"Macacos Prego",
+         "CostText":"50",
+         "Cost":50,
+         "PPSUpgrade":5,
+         "Bought":false
+      },
+      {
+         "Id":7,
+         "Name":"Pesquisadores Pescados",
+         "CostText":"50",
+         "Cost":50,
+         "PPSUpgrade":5,
+         "Bought":false
+      },
+      {
+         "Id":8,
+         "Name":"Pandas Padeiros",
+         "CostText":"100",
+         "Cost":100,
+         "PPSUpgrade":10,
+         "Bought":false
+      },
+      {
+         "Id":9,
+         "Name":"Dia de São Patrício",
+         "CostText":"100",
+         "Cost":100,
+         "PPSUpgrade":10,
+         "Bought":false
+      },
+      {
+         "Id":10,
+         "Name":"Tubarões Martelo",
+         "CostText":"100",
+         "Cost":100,
+         "PPSUpgrade":10,
+         "Bought":false
+      },
+      {
+         "Id":11,
+         "Name":"Ursos Concursados",
+         "CostText":"100",
+         "Cost":100,
+         "PPSUpgrade":10,
+         "Bought":false
+      },
+      {
+         "Id":12,
+         "Name":"Trigo Dourado",
+         "CostText":"500",
+         "Cost":500,
+         "PPSUpgrade":15,
+         "Bought":false
+      },
+      {
+         "Id":13,
+         "Name":"O corpo de Patricio",
+         "CostText":"500",
+         "Cost":500,
+         "PPSUpgrade":15,
+         "Bought":false
+      },
+      {
+         "Id":14,
+         "Name":"Parafusos e Porcos",
+         "CostText":"500",
+         "Cost":500,
+         "PPSUpgrade":15,
+         "Bought":false
+      },
+      {
+         "Id":15,
+         "Name":"Gatos Alquimistas",
+         "CostText":"500",
+         "Cost":500,
+         "PPSUpgrade":15,
+         "Bought":false
+      },
+      {
+         "Id":16,
+         "Name":"Dominação Mundial",
+         "CostText":"1000",
+         "Cost":1000,
+         "PPSUpgrade":20,
+         "Bought":false
+      },
+      {
+         "Id":17,
+         "Name":"Uma só fé",
+         "CostText":"1000",
+         "Cost":1000,
+         "PPSUpgrade":20,
+         "Bought":false
+      },
+      {
+         "Id":18,
+         "Name":"Revolução ´x^",
+         "CostText":"1000",
+         "Cost":1000,
+         "PPSUpgrade":20,
+         "Bought":false
+      },
+      {
+         "Id":19,
+         "Name":"Cura para a velhice",
+         "CostText":"1000",
+         "Cost":1000,
+         "PPSUpgrade":20,
+         "Bought":false
+      }
+   ]
+}
