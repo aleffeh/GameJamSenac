@@ -17,7 +17,8 @@ namespace GameJam
 {
     class Program
     {
-
+        
+        #region props
         public static bool Exit { get; private set; }
         public static int Breads { get; private set; }
         public static int BreadsPerSecond { get; private set; }
@@ -35,7 +36,7 @@ namespace GameJam
         
         public static Color[] Colors;
         public static string[] Names;
-
+        #endregion
 
         static void Main(string[] args)
         {
@@ -78,6 +79,12 @@ namespace GameJam
             {
                 NewGame();
             }
+        }
+
+        private static void NewGame()
+        {
+            Data = JsonConvert.DeserializeObject<GameData>(File.ReadAllText("user.dll"));
+            SetUpVars();
         }
 
         //Runs after Esc pressed, defines the closing behaviour.
@@ -482,11 +489,7 @@ namespace GameJam
 
             }
         }
-        private static void NewGame()
-        {
-            Data = JsonConvert.DeserializeObject<GameData>(File.ReadAllText("user.dll"));
-            SetUpVars();
-        }
+
 
         static void Comprar(int position, params bool[] last)
         {
