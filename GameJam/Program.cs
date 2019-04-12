@@ -6,13 +6,16 @@ using System.Text;
 using System.Threading;
 using LowLevelInput.Converters;
 using LowLevelInput.Hooks;
+using System.Windows.Forms;
 
 namespace GameJam
 {
     class Program
     {
         public static bool Exit { get; private set; }
-        public static int Clicks { get; private set; }
+        public static int Breads { get; private set; }
+        public static int BreadsPerSecond { get; private set; }
+        public static int BreadsPerClick { get; private set; }
         public static int DelayTime { get; private set; } // in miliseconds - define in SetUpVars().
         public static LowLevelKeyboardHook KeyboardHook { get; private set; }
         public static LowLevelMouseHook MouseHook { get; private set; }
@@ -57,26 +60,26 @@ namespace GameJam
         private static void SetUpVars()
         {
             Exit = false;
-            Clicks = 0;
-            DelayTime = 50;
+            Breads = 0;
+            DelayTime = 60;
         }
 
         //This function runs every x mileseconds, defined on the SetUpVars call.
         private static void Update()
         {
-            //CheckStuff();
+            CheckStuff();
             UpdateUI();
         }
         //This method runs every x milesconds, inside the Update method,
         private static void UpdateUI()
         {
             Console.Clear();
-            Console.WriteLine("Clicks --- {0} ", Clicks);
+            Console.WriteLine("Clicks --- {0} ", Breads);
         }
         //All the Checkings that needs to run every frame goes here, this is the first method that run on Update().
         private static void CheckStuff()
         {
-
+           
         }
         #endregion
 
@@ -85,7 +88,7 @@ namespace GameJam
         //This is the cherry on top of the cake, this method handle the mouse clicks and has ONLY ONE FUNCTION, update the Click property... ^_^
         private static void MouseHook_OnMouseEvent(VirtualKeyCode key, KeyState state, int x, int y)
         {
-            if (state == KeyState.Down) Clicks++;
+            if (state == KeyState.Down) Breads++;
         }
 
         //This method deals with all the keyboard inputs, once the Console.Reads doesn't work anymore. 
@@ -96,8 +99,21 @@ namespace GameJam
                 case VirtualKeyCode.Escape:
                     Exit = true;
                     break;
+                case VirtualKeyCode.A:
+                    //Ajudantes Buy
+                    break;
+                case VirtualKeyCode.S:
+                    //Igreja
+                    break;
+                case VirtualKeyCode.D:
+                    //Fábrica
+                    break;
+                case VirtualKeyCode.F:
+                    //Pesquisa
+                    break;
             }
         }
+
         #endregion
 
         //This region deals with the QuickEdit mode included in console.
