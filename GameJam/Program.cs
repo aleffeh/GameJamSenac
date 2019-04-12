@@ -17,6 +17,7 @@ namespace GameJam
 {
     class Program
     {
+
         public static bool Exit { get; private set; }
         public static int Breads { get; private set; }
         public static int BreadsPerSecond { get; private set; }
@@ -25,6 +26,7 @@ namespace GameJam
         public static LowLevelKeyboardHook KeyboardHook { get; private set; }
         public static LowLevelMouseHook MouseHook { get; private set; }
         public static GameData Data { get; set; }
+        public static string DefaultDB { get; private set; }
 
         public static Color Red;
         public static Color White;
@@ -32,7 +34,7 @@ namespace GameJam
 
 
         public static Color[] Colors;
-        public static string[] Names ;
+        public static string[] Names;
 
 
         static void Main(string[] args)
@@ -68,6 +70,7 @@ namespace GameJam
         private static void GetData()
         {
             Data = JsonConvert.DeserializeObject<GameData>(File.ReadAllText("data.json"));
+
         }
 
         //Runs after Esc pressed, defines the closing behaviour.
@@ -85,6 +88,7 @@ namespace GameJam
             Data.BreadsPerClick = BreadsPerClick;
             var json = JsonConvert.SerializeObject(Data);
             File.WriteAllText("data.json", json);
+
         }
 
         // On this call, defines all the default values for the properties
@@ -103,36 +107,6 @@ namespace GameJam
             BreadsPerClick = Data.BreadsPerClick;
             DelayTime = 150;
 
-            for (int i = 0; i < 20; i++)
-            {
-                if (Data.Upgrades[i].Cost <= Breads)
-                {
-                    if (Data.Upgrades[i].Bought)
-                    {
-                        Colors[i] = Green;
-                    }
-                    else
-                    {
-                        Colors[i] = White;
-                    }
-                }
-                else
-                {
-                    Colors[i] = Red;
-                }
-            }
-
-            for (int i = 0; i < 20; i++)
-            {
-                if (Data.Upgrades[i].Cost <= Breads)
-                {
-                    Names[i] = Data.Upgrades[i].Name;
-                }
-                else
-                {
-                    Names[i] = "???";
-                }
-            }
 
         }
 
@@ -167,7 +141,7 @@ namespace GameJam
         //This function runs every x mileseconds, defined on the SetUpVars call.
         private static void Update()
         {
-           // CheckStuff();
+            // CheckStuff();
             UpdateUI();
         }
         //This method runs every x milesconds, inside the Update method,
@@ -190,7 +164,12 @@ namespace GameJam
                 }
                 else
                 {
-                    Colors[i] = Red;
+                    if (Data.Upgrades[i].Bought)
+                    {
+                        Colors[i] = Green;
+                    }
+                    else
+                        Colors[i] = Red;
                 }
             }
 
@@ -198,11 +177,15 @@ namespace GameJam
             {
                 if (Data.Upgrades[i].Cost <= Breads)
                 {
-                    Names[i] = Data.Upgrades[i].Name;
+                    if (Data.Upgrades[i].Bought)
+                        Names[i] = Data.Upgrades[i].Name;
                 }
                 else
                 {
-                    Names[i] = "???";
+                    if (!Data.Upgrades[i].Bought)
+                        Names[i] = "???";
+                    else
+                        Names[i] = Data.Upgrades[i].Name;
                 }
             }
 
@@ -214,11 +197,13 @@ namespace GameJam
         {
 
             string paesString = Breads + " Pães";
+            string sec = BreadsPerSecond + " Pães por Segundo";
+            string click = BreadsPerClick   + " Pães por Clique";
             Console.WriteLine("                                      Patricio's Bakery ");
             Console.WriteLine("     ~~~Statistics~~~                   ___________");
             Console.WriteLine("{0,-39}(   )_______)", paesString);
-            Console.WriteLine("{0,-39}|   |Clique!|", "0 Pães por Segundo");
-            Console.WriteLine("{0,-39}|___|_______|\n", "0 Pães por clique");
+            Console.WriteLine("{0,-39}|   |Clique!|", sec);
+            Console.WriteLine("{0,-39}|___|_______|\n", click);
             Console.WriteLine("                                             ~~~Upgrades~~~");
             Console.WriteLine("                                                          	    @*#* ");
             Console.WriteLine("                                     +                            _*                     _____ ");
@@ -229,32 +214,32 @@ namespace GameJam
             Console.WriteLine("--------AJUDANTES--------|---------IGREJA----------|---------FÁBRICA---------|--------PESQUISA---------");
 
             // Line 1
-            Console.Write("{0,-24}{1}|", Names[0],Data.Upgrades[0].CostText,Colors[0]);
-            Console.Write("{0,-24}{1}|", Names[1],Data.Upgrades[1].CostText,Colors[1]);
+            Console.Write("{0,-24}{1}|", Names[0], Data.Upgrades[0].CostText, Colors[0]);
+            Console.Write("{0,-24}{1}|", Names[1], Data.Upgrades[1].CostText, Colors[1]);
             Console.Write("{0,-24}{1}|", Names[2], Data.Upgrades[2].CostText, Colors[2]);
-            Console.Write("{0,-24}{1}\n",Names[3], Data.Upgrades[3].CostText, Colors[3]);
+            Console.Write("{0,-24}{1}\n", Names[3], Data.Upgrades[3].CostText, Colors[3]);
 
             // Line 2
-            Console.Write("{0,-23}{1}|", Names[4],Data.Upgrades[4].CostText,Colors[4]);
-            Console.Write("{0,-23}{1}|", Names[5],Data.Upgrades[5].CostText,Colors[5]);
+            Console.Write("{0,-23}{1}|", Names[4], Data.Upgrades[4].CostText, Colors[4]);
+            Console.Write("{0,-23}{1}|", Names[5], Data.Upgrades[5].CostText, Colors[5]);
             Console.Write("{0,-23}{1}|", Names[6], Data.Upgrades[6].CostText, Colors[6]);
-            Console.Write("{0,-23}{1}\n",Names[7], Data.Upgrades[7].CostText, Colors[7]);
-            
+            Console.Write("{0,-23}{1}\n", Names[7], Data.Upgrades[7].CostText, Colors[7]);
+
             // Line 3
-            Console.Write("{0,-22}{1}|", Names[8],Data.Upgrades[8].CostText,Colors[8]);
-            Console.Write("{0,-22}{1}|", Names[9],Data.Upgrades[9].CostText,Colors[9]);
+            Console.Write("{0,-22}{1}|", Names[8], Data.Upgrades[8].CostText, Colors[8]);
+            Console.Write("{0,-22}{1}|", Names[9], Data.Upgrades[9].CostText, Colors[9]);
             Console.Write("{0,-22}{1}|", Names[10], Data.Upgrades[10].CostText, Colors[10]);
-            Console.Write("{0,-22}{1}\n",Names[11], Data.Upgrades[11].CostText, Colors[11]);
+            Console.Write("{0,-22}{1}\n", Names[11], Data.Upgrades[11].CostText, Colors[11]);
             // Line 4
-            Console.Write("{0,-22}{1}|", Names[12],Data.Upgrades[12].CostText,Colors[12]);
-            Console.Write("{0,-22}{1}|", Names[13],Data.Upgrades[13].CostText,Colors[13]);
+            Console.Write("{0,-22}{1}|", Names[12], Data.Upgrades[12].CostText, Colors[12]);
+            Console.Write("{0,-22}{1}|", Names[13], Data.Upgrades[13].CostText, Colors[13]);
             Console.Write("{0,-22}{1}|", Names[14], Data.Upgrades[14].CostText, Colors[14]);
-            Console.Write("{0,-22}{1}\n",Names[15], Data.Upgrades[15].CostText, Colors[15]);
+            Console.Write("{0,-22}{1}\n", Names[15], Data.Upgrades[15].CostText, Colors[15]);
             // Line 5
-            Console.Write("{0,-21}{1}|", Names[16],Data.Upgrades[16].CostText,Colors[16]);
-            Console.Write("{0,-21}{1}|", Names[17],Data.Upgrades[17].CostText,Colors[17]);
-            Console.Write("{0,-21}{1}|", Names[18],Data.Upgrades[18].CostText,Colors[18]);
-            Console.Write("{0,-21}{1}\n",Names[19], Data.Upgrades[19].CostText, Colors[19]);
+            Console.Write("{0,-21}{1}|", Names[16], Data.Upgrades[16].CostText, Colors[16]);
+            Console.Write("{0,-21}{1}|", Names[17], Data.Upgrades[17].CostText, Colors[17]);
+            Console.Write("{0,-21}{1}|", Names[18], Data.Upgrades[18].CostText, Colors[18]);
+            Console.Write("{0,-21}{1}\n", Names[19], Data.Upgrades[19].CostText, Colors[19]);
 
 
 
@@ -269,12 +254,6 @@ namespace GameJam
 
 
 
-            //Data.Upgrades.ForEach(update => {
-            //    if(update.Cost <= Data.Breads)
-            //    {
-
-            //    }
-            //});
         }
         #endregion
 
@@ -283,7 +262,7 @@ namespace GameJam
         //This is the cherry on top of the cake, this method handle the mouse clicks and has ONLY ONE FUNCTION, update the Click property... ^_^
         private static void MouseHook_OnMouseEvent(VirtualKeyCode key, KeyState state, int x, int y)
         {
-            if (state == KeyState.Down) Breads++;
+            if (state == KeyState.Down) Breads+= BreadsPerClick;
         }
 
         //This method deals with all the keyboard inputs, once the Console.Reads doesn't work anymore. 
@@ -291,22 +270,250 @@ namespace GameJam
         {
             switch (key)
             {
+
                 case VirtualKeyCode.Escape:
                     Exit = true;
                     break;
                 case VirtualKeyCode.A:
                     //Ajudantes Buy
+                    if (!Data.Upgrades[0].Bought)
+                    {
+                        if (Breads > Data.Upgrades[0].Cost)
+                        {
+                            Comprar(0);
+                        }
+
+                    }
+                    else
+                    {
+                        if (!Data.Upgrades[4].Bought)
+                        {
+                            if (Breads > Data.Upgrades[4].Cost)
+                            {
+                                Comprar(4);
+                            }
+                        }
+                        else
+                        {
+                            if (!Data.Upgrades[8].Bought)
+                            {
+                                if (Breads > Data.Upgrades[8].Cost)
+                                {
+                                    Comprar(8);
+                                }
+                            }
+                            else
+                            {
+                                if (!Data.Upgrades[12].Bought)
+                                {
+                                    if (Breads > Data.Upgrades[12].Cost)
+                                    {
+                                        Comprar(12);
+                                    }
+                                }
+                                else
+                                {
+                                    if (!Data.Upgrades[16].Bought)
+                                    {
+                                        if (Breads > Data.Upgrades[16].Cost)
+                                        {
+                                            Comprar(16);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     break;
                 case VirtualKeyCode.S:
-                    //Igreja
+                    if (!Data.Upgrades[1].Bought)
+                    {
+                        if (Breads > Data.Upgrades[1].Cost)
+                        {
+                            Comprar(1);
+                        }
+
+                    }
+                    else
+                    {
+                        if (!Data.Upgrades[5].Bought)
+                        {
+                            if (Breads > Data.Upgrades[5].Cost)
+                            {
+                                Comprar(5);
+                            }
+                        }
+                        else
+                        {
+                            if (!Data.Upgrades[9].Bought)
+                            {
+                                if (Breads > Data.Upgrades[9].Cost)
+                                {
+                                    Comprar(9);
+                                }
+                            }
+                            else
+                            {
+                                if (!Data.Upgrades[13].Bought)
+                                {
+                                    if (Breads > Data.Upgrades[13].Cost)
+                                    {
+                                        Comprar(13);
+                                    }
+                                }
+                                else
+                                {
+                                    if (!Data.Upgrades[17].Bought)
+                                    {
+                                        if (Breads > Data.Upgrades[17].Cost)
+                                        {
+                                            Comprar(17);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     break;
                 case VirtualKeyCode.D:
                     //Fábrica
+                    if (!Data.Upgrades[2].Bought)
+                    {
+                        if (Breads > Data.Upgrades[2].Cost)
+                        {
+                            Comprar(2);
+                        }
+
+                    }
+                    else
+                    {
+                        if (!Data.Upgrades[6].Bought)
+                        {
+                            if (Breads > Data.Upgrades[6].Cost)
+                            {
+                                Comprar(6);
+                            }
+                        }
+                        else
+                        {
+                            if (!Data.Upgrades[10].Bought)
+                            {
+                                if (Breads > Data.Upgrades[10].Cost)
+                                {
+                                    Comprar(10);
+                                }
+                            }
+                            else
+                            {
+                                if (!Data.Upgrades[14].Bought)
+                                {
+                                    if (Breads > Data.Upgrades[14].Cost)
+                                    {
+                                        Comprar(14);
+                                    }
+                                }
+                                else
+                                {
+                                    if (!Data.Upgrades[18].Bought)
+                                    {
+                                        if (Breads > Data.Upgrades[18].Cost)
+                                        {
+                                            Comprar(18);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     break;
                 case VirtualKeyCode.F:
                     //Pesquisa
+                    if (!Data.Upgrades[3].Bought)
+                    {
+                        if (Breads > Data.Upgrades[3].Cost)
+                        {
+                            Comprar(3,true);
+                        }
+
+                    }
+                    else
+                    {
+                        if (!Data.Upgrades[7].Bought)
+                        {
+                            if (Breads > Data.Upgrades[7].Cost)
+                            {
+                                Comprar(7,true);
+                            }
+                        }
+                        else
+                        {
+                            if (!Data.Upgrades[11].Bought)
+                            {
+                                if (Breads > Data.Upgrades[11].Cost)
+                                {
+                                    Comprar(11,true);
+                                }
+                            }
+                            else
+                            {
+                                if (!Data.Upgrades[15].Bought)
+                                {
+                                    if (Breads > Data.Upgrades[15].Cost)
+                                    {
+                                        Comprar(15,true);
+                                    }
+                                }
+                                else
+                                {
+                                    if (!Data.Upgrades[19].Bought)
+                                    {
+                                        if (Breads > Data.Upgrades[19].Cost)
+                                        {
+                                            Comprar(19,true);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     break;
+                    //case VirtualKeyCode.F5:
+                    //    NewGame();
+                    //    break;
             }
+        }
+
+        //private static void NewGame()
+        //{
+        //    var datinha = JsonConvert.DeserializeObject<GameData>(File.ReadAllText("user.dll"));
+        //    var json = JsonConvert.SerializeObject(datinha);
+        //    if (!File.Exists("data.json"))
+        //    {
+        //        FileStream str = File.Create("data.json");
+        //        str.Close();
+        //        File.WriteAllText("data.json", json);
+        //    }
+        //    GetData();
+        //    SetUpVars();
+        //}
+
+        static void Comprar(int position, params bool[] last)
+        {
+            if (last.Length == 0)
+            {
+
+                Data.Upgrades[position].Bought = true;
+                Breads -= Data.Upgrades[position].Cost;
+                BreadsPerSecond += Data.Upgrades[position].PPSUpgrade;
+            }
+            else
+            {
+                Data.Upgrades[position].Bought = true;
+                Breads -= Data.Upgrades[position].Cost;
+                BreadsPerClick += Data.Upgrades[position].PPSUpgrade;
+            }
+
         }
 
         #endregion
@@ -326,7 +533,7 @@ namespace GameJam
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
-            [DllImport("kernel32.dll", ExactSpelling = true)]
+        [DllImport("kernel32.dll", ExactSpelling = true)]
         private static extern IntPtr GetConsoleWindow();
 
         // config to disable close button end
