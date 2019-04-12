@@ -13,7 +13,7 @@ namespace GameJam.Models
         public int BreadsPerSecond { get; set; }
         public int BreadsPerClick { get; set; }
         public List<Upgrade> Upgrades { get; set; }
-        public List<Achievement> Achievements { get; set; }
+        //public List<Achievement> Achievements { get; set; } deixa pra v2 kkk
 
     }
 }

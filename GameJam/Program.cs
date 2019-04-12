@@ -7,6 +7,11 @@ using System.Threading;
 using LowLevelInput.Converters;
 using LowLevelInput.Hooks;
 using System.Windows.Forms;
+using GameJam.Models;
+using Newtonsoft.Json;
+using System.IO;
+using System.Drawing;
+using Console = Colorful.Console;
 
 namespace GameJam
 {
@@ -19,6 +24,16 @@ namespace GameJam
         public static int DelayTime { get; private set; } // in miliseconds - define in SetUpVars().
         public static LowLevelKeyboardHook KeyboardHook { get; private set; }
         public static LowLevelMouseHook MouseHook { get; private set; }
+        public static GameData Data { get; set; }
+
+        public static Color Red;
+        public static Color White;
+        public static Color Green;
+
+
+        public static Color[] Colors;
+        public static string[] Names ;
+
 
         static void Main(string[] args)
         {
@@ -35,6 +50,7 @@ namespace GameJam
         #region SetUp/SetDown/CheckUps/Updates
         private static void SetUp()
         {
+            GetData();
             SetUpVars();
             // Disable the Console Edit mode, in way to never lock the main thread during execution due to selections on the window.
             DisableQuickEdit();
@@ -49,37 +65,216 @@ namespace GameJam
             MouseHook.InstallHook();
         }
 
+        private static void GetData()
+        {
+            Data = JsonConvert.DeserializeObject<GameData>(File.ReadAllText("data.json"));
+        }
+
         //Runs after Esc pressed, defines the closing behaviour.
         private static void SetDown()
         {
             MouseHook.Dispose();
             KeyboardHook.Dispose();
+            PersistChanges();
+        }
+
+        private static void PersistChanges()
+        {
+            Data.Breads = Breads;
+            Data.BreadsPerSecond = BreadsPerSecond;
+            Data.BreadsPerClick = BreadsPerClick;
+            var json = JsonConvert.SerializeObject(Data);
+            File.WriteAllText("data.json", json);
         }
 
         // On this call, defines all the default values for the properties
         private static void SetUpVars()
         {
+
+            Red = Color.FromArgb(255, 82, 82);
+            White = Color.FromArgb(255, 255, 255);
+            Green = Color.FromArgb(81, 255, 178);
+            Colors = new Color[20];
+            Names = new string[20];
+            //GenerateEmptyData();
             Exit = false;
-            Breads = 0;
-            DelayTime = 60;
+            Breads = Data.Breads;
+            BreadsPerSecond = Data.BreadsPerSecond;
+            BreadsPerClick = Data.BreadsPerClick;
+            DelayTime = 150;
+
+            for (int i = 0; i < 20; i++)
+            {
+                if (Data.Upgrades[i].Cost <= Breads)
+                {
+                    if (Data.Upgrades[i].Bought)
+                    {
+                        Colors[i] = Green;
+                    }
+                    else
+                    {
+                        Colors[i] = White;
+                    }
+                }
+                else
+                {
+                    Colors[i] = Red;
+                }
+            }
+
+            for (int i = 0; i < 20; i++)
+            {
+                if (Data.Upgrades[i].Cost <= Breads)
+                {
+                    Names[i] = Data.Upgrades[i].Name;
+                }
+                else
+                {
+                    Names[i] = "???";
+                }
+            }
+
         }
+
+        //private static void GenerateEmptyData()W
+        //{
+        //    var upgrades = new List<Upgrade>();
+        //    for (int i = 0; i < 20; i++)
+        //    {
+        //        upgrades.Add(new Upgrade
+        //        {
+        //            Bought = false,
+        //            Cost = 0,
+        //            CostText = "0",
+        //            Name = "unknow",
+        //            PPSUpgrade = 0,
+        //            Id = i
+        //        });
+        //    }
+        //    var gameData = new GameData()
+        //    {
+        //        Breads = 0,
+        //        BreadsPerClick = 1,
+        //        BreadsPerSecond = 0,
+        //        Upgrades = upgrades
+        //    };
+
+        //    var json = JsonConvert.SerializeObject(gameData);
+        //    File.WriteAllText("data.json", json);
+        //}
+
 
         //This function runs every x mileseconds, defined on the SetUpVars call.
         private static void Update()
         {
-            CheckStuff();
+           // CheckStuff();
             UpdateUI();
         }
         //This method runs every x milesconds, inside the Update method,
         private static void UpdateUI()
         {
             Console.Clear();
-            Console.WriteLine("Clicks --- {0} ", Breads);
+
+            for (int i = 0; i < 20; i++)
+            {
+                if (Data.Upgrades[i].Cost <= Breads)
+                {
+                    if (Data.Upgrades[i].Bought)
+                    {
+                        Colors[i] = Green;
+                    }
+                    else
+                    {
+                        Colors[i] = White;
+                    }
+                }
+                else
+                {
+                    Colors[i] = Red;
+                }
+            }
+
+            for (int i = 0; i < 20; i++)
+            {
+                if (Data.Upgrades[i].Cost <= Breads)
+                {
+                    Names[i] = Data.Upgrades[i].Name;
+                }
+                else
+                {
+                    Names[i] = "???";
+                }
+            }
+
+            Construct();
         }
+
+
+        static void Construct()
+        {
+
+            string paesString = Breads + " Pães";
+            Console.WriteLine("                                      Patricio's Bakery ");
+            Console.WriteLine("     ~~~Statistics~~~                   ___________");
+            Console.WriteLine("{0,-39}(   )_______)", paesString);
+            Console.WriteLine("{0,-39}|   |Clique!|", "0 Pães por Segundo");
+            Console.WriteLine("{0,-39}|___|_______|\n", "0 Pães por clique");
+            Console.WriteLine("                                             ~~~Upgrades~~~");
+            Console.WriteLine("                                                          	    @*#* ");
+            Console.WriteLine("                                     +                            _*                     _____ ");
+            Console.WriteLine("          (o_                        A_                      _   | |                    /    /|");
+            Console.WriteLine("          //\\                       /\\-\\                    | |__| |                   /    //");
+            Console.WriteLine("          V_/_                     _||_|_                 __|      |__                (====|/ \n");
+            Console.WriteLine("          (A)                        (S)                       (D)                       (F) \n", Color.FromArgb(81, 255, 178));
+            Console.WriteLine("--------AJUDANTES--------|---------IGREJA----------|---------FÁBRICA---------|--------PESQUISA---------");
+
+            // Line 1
+            Console.Write("{0,-24}{1}|", Names[0],Data.Upgrades[0].CostText,Colors[0]);
+            Console.Write("{0,-24}{1}|", Names[1],Data.Upgrades[1].CostText,Colors[1]);
+            Console.Write("{0,-24}{1}|", Names[2], Data.Upgrades[2].CostText, Colors[2]);
+            Console.Write("{0,-24}{1}\n",Names[3], Data.Upgrades[3].CostText, Colors[3]);
+
+            // Line 2
+            Console.Write("{0,-23}{1}|", Names[4],Data.Upgrades[4].CostText,Colors[4]);
+            Console.Write("{0,-23}{1}|", Names[5],Data.Upgrades[5].CostText,Colors[5]);
+            Console.Write("{0,-23}{1}|", Names[6], Data.Upgrades[6].CostText, Colors[6]);
+            Console.Write("{0,-23}{1}\n",Names[7], Data.Upgrades[7].CostText, Colors[7]);
+            
+            // Line 3
+            Console.Write("{0,-22}{1}|", Names[8],Data.Upgrades[8].CostText,Colors[8]);
+            Console.Write("{0,-22}{1}|", Names[9],Data.Upgrades[9].CostText,Colors[9]);
+            Console.Write("{0,-22}{1}|", Names[10], Data.Upgrades[10].CostText, Colors[10]);
+            Console.Write("{0,-22}{1}\n",Names[11], Data.Upgrades[11].CostText, Colors[11]);
+            // Line 4
+            Console.Write("{0,-22}{1}|", Names[12],Data.Upgrades[12].CostText,Colors[12]);
+            Console.Write("{0,-22}{1}|", Names[13],Data.Upgrades[13].CostText,Colors[13]);
+            Console.Write("{0,-22}{1}|", Names[14], Data.Upgrades[14].CostText, Colors[14]);
+            Console.Write("{0,-22}{1}\n",Names[15], Data.Upgrades[15].CostText, Colors[15]);
+            // Line 5
+            Console.Write("{0,-21}{1}|", Names[16],Data.Upgrades[16].CostText,Colors[16]);
+            Console.Write("{0,-21}{1}|", Names[17],Data.Upgrades[17].CostText,Colors[17]);
+            Console.Write("{0,-21}{1}|", Names[18],Data.Upgrades[18].CostText,Colors[18]);
+            Console.Write("{0,-21}{1}\n",Names[19], Data.Upgrades[19].CostText, Colors[19]);
+
+
+
+            Console.Write("\n                                           DINOSSOUR ", Color.FromArgb(81, 255, 178));
+            Console.Write("GAMES ", Color.FromArgb(164, 82, 255));
+        }
+
+
         //All the Checkings that needs to run every frame goes here, this is the first method that run on Update().
         private static void CheckStuff()
         {
-           
+
+
+
+            //Data.Upgrades.ForEach(update => {
+            //    if(update.Cost <= Data.Breads)
+            //    {
+
+            //    }
+            //});
         }
         #endregion
 
