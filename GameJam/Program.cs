@@ -55,6 +55,9 @@ namespace GameJam
         #region SetUp/SetDown/CheckUps/Updates
         private static void SetUp()
         {
+            Console.CursorVisible = false;
+            Console.Title = "Senac Clicker GameJam";
+            
             GetData();
             SetUpVars();
             // Disable the Console Edit mode, in way to never lock the main thread during execution due to selections on the window.
@@ -119,7 +122,7 @@ namespace GameJam
             Breads = Data.Breads;
             BreadsPerSecond = Data.BreadsPerSecond;
             BreadsPerClick = Data.BreadsPerClick;
-            DelayTime = 150;
+            DelayTime = 200;
 
 
         }
@@ -204,11 +207,10 @@ namespace GameJam
         static void Construct()
         {
 
-           
             Console.WriteLine("                                                            Patricio's Bakery ");
             Console.WriteLine("     |----Statistics----| ");
             Console.Write("{0,-62}  ___________\n","");
-            Console.Write("{0,7} ",Breads,Green); Console.Write("{0,-54} (   )_______)\n","Pães");
+            Console.Write("{0,7} ", Breads, Green); Console.Write("{0,-54} (   )_______)\n","Pães");
             Console.Write("{0,7} ", BreadsPerSecond,Green); Console.Write("{0,-54} |   |Clique!|\n","Pães Por Segundo");
             Console.Write("{0,7} ", BreadsPerClick, Green); Console.Write("{0,-54} |___|_______|\n","Pães Por Click");
             Console.WriteLine("\n\n\n                                                            |----Upgrades----|\n");
@@ -252,7 +254,7 @@ namespace GameJam
             Console.Write("GAMES ", Color.FromArgb(164, 82, 255));
         }
 
-        
+
         //All the Checkings that needs to run every frame goes here, this is the first method that run on Update().
         private static void CheckStuff()
         {
@@ -265,7 +267,9 @@ namespace GameJam
         private static void MouseHook_OnMouseEvent(VirtualKeyCode key, KeyState state, int x, int y)
         {
             if (state == KeyState.Down) Breads += BreadsPerClick;
+
         }
+
 
         //This method deals with all the keyboard inputs, once the Console.Reads doesn't work anymore. 
         private static void KeyboardHook_OnKeyboardEvent(VirtualKeyCode key, KeyState state)
