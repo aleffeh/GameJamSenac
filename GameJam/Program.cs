@@ -42,6 +42,7 @@ namespace GameJam
         {
             SetUp();
             BPS();
+
             while (!Exit)
             {
                 Update();
